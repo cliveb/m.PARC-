@@ -1,0 +1,6 @@
+{
+  "application": "mPARC",
+  "readers": [
+    "public"
+  ]
+}

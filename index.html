@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+        <title>Hello World</title>
+
+        <script src="sencha-touch.js" type="text/javascript"></script>
+        <link href="sencha-touch.css" rel="stylesheet" type="text/css" />
+
+		<!-- <style>
+		   h2 a {
+			font-weight:bold;
+			color:blue!important; }
+		
+		</style> -->
+
+		<script type="text/javascript">
+		
+		new Ext.Application({
+	        launch: function() {
+		
+		var viewport = new Ext.Panel({
+			fullscreen: true,
+		    scroll: 'vertical',
+		    styleHtmlContent: true,
+
+		    blogTpl:  new Ext.XTemplate([
+		        '<tpl for="item">',
+		            '<h2><a href="{link}" target="_blank">{title}</a><small> by {author}</small></h2>',
+		            '<p>{description}</p>',
+		        '</tpl>'
+		    ]),
+
+		    dockedItems: [
+		        {
+		            dock : 'top',
+		            xtype: 'toolbar',
+					title: 'PARC'
+		        }
+		    ]
+		});
+
+		Ext.YQL = {
+		    useAllPublicTables: true,
+		    yqlUrl: 'http://query.yahooapis.com/v1/public/yql',
+		    request: function(cfg) {
+		        var p = cfg.params || {};
+		        p.q = cfg.query;
+		        p.format = 'json';
+		        if (this.useAllPublicTables) {
+		            p.env = 'store://datatables.org/alltableswithkeys';
+		        }
+
+		        Ext.util.JSONP.request({
+		            url: this.yqlUrl,
+		            callbackKey: 'callback',
+		            params: p,
+		            callback: cfg.callback,
+		            scope: cfg.scope || window
+		        });
+		    }
+		};
+		
+        viewport.update('');  
+        viewport.setLoading(true, true);
+
+        Ext.YQL.request({
+            query: "select * from rss where url='http://feeds.feedburner.com/Parc-Forum' limit 10",
+            callback: function(response) {
+                if (response.query && response.query.results) {
+                    viewport.update(viewport.blogTpl.apply(response.query.results));
+                    viewport.scroller.scrollTo({x: 0, y: 0});
+                }
+
+                viewport.setLoading(false);
+            }
+        });
+        
+		
+
+        }
+    });
+
+		
+		</script>
+
+    </head>
+    <body></body>
+</html>
